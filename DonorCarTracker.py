@@ -1,32 +1,35 @@
 from datetime import date, timedelta
+import SendNotification
 import StarkInventory
 import ImpactInventory
 import sqlite3
+import configparser
+import os
 
-#Stark Information
-# starkQuery = "https://starkautosales.com/inventory.php?startyear=2006&location=TORONTO&model=CORVETTE"
-starkQuery = "https://starkautosales.com/inventory.php?startyear=2006&location=&model=4+SERIES"
+dir_path = os.path.dirname(os.path.realpath(__file__))
+configFilename = dir_path + "/config.ini"
 
-#Impact Auto Information
-postURL = "https://www.impactauto.ca/Search/GetSearchResult/"
-model = "Corvette"
-startYear = "2006"
+if not os.path.isfile(configFilename):
+    print("No configuration file found. Please run Setup before running this.")
+    exit(0)
+
+config = configparser.ConfigParser()
+config.read(configFilename)
 
 #New Cars List
 newStark  = []
 newImpact = []
 
 #Get List of cars from respective databases
-starkCars  = StarkInventory.getStarkCars(starkQuery)
-impactCars = ImpactInventory.getImpactCars(postURL, model, startYear)
+starkCars  = StarkInventory.getStarkCars(config["STARK"]["URL"])
+impactCars = ImpactInventory.getImpactCars(config["IMPACT"]["URL"], config["IMPACT"]["Model"], config["IMPACT"]["Year"])
 
-#TODO change to config file
-db = sqlite3.connect('./InvHistory.db')
+db = sqlite3.connect(config["DATABASE"]["Path"])
 connection = db.cursor()
 
 today = date.today().strftime('%Y-%m-%d')
 
-"""for car in starkCars:
+for car in starkCars:
     d = (car.stockNum, car.year, car.tranny, today)
     ins = 'INSERT INTO Stark (StockNumber, CarYear, Transmission, DateAccessed) VALUES (?,?,?,?)'
 
@@ -38,10 +41,10 @@ for car in impactCars:
 
     connection.execute(ins, d)
 
-db.commit()"""
+db.commit()
 
+#Check if there's any cars today that weren't there yesterday
 yesterday = (date.today() - timedelta(days=1)).strftime('%Y-%m-%d')
-
 for car in starkCars:
     d = (car.stockNum, yesterday)
     checkPrevDay = 'SELECT EXISTS(SELECT * FROM Stark WHERE StockNumber = ? AND DateAccessed = ? LIMIT 1)'
@@ -73,4 +76,4 @@ db.commit()
 db.close()
 
 if len(newStark) > 0 or len(newImpact) > 0:
-    sendEmail = 1
+    SendNotification.sendNotification(newStark, newImpact, config)

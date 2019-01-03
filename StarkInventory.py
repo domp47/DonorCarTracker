@@ -9,6 +9,9 @@ def getStarkCars(query):
 
     inventoryTable = soup.find("ul", {"id":"inventory-list"})
 
+    if inventoryTable == None:
+        return []
+
     inventoryList = inventoryTable.findAll("li", {"class":"table"})
 
     inventory = []

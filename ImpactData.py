@@ -7,5 +7,5 @@ class Impact:
         self.tranny = tranny
         self.model = model
 
-    def print(self):
-        print("Stock #:",self.stockNum,", Year:",self.year,", Tranny:",self.tranny,", Model:",self.model,", Auction Date:",self.auctionDate)
+    def toString(self):
+        return "Stock #: " + self.stockNum + ", Year: " + str(self.year) + ", Tranny: " + self.tranny + ", Model: " + self.model + ", Auction Date: " + self.auctionDate

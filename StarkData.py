@@ -5,5 +5,5 @@ class Stark:
         self.year = year
         self.tranny = "" if tranny is None else tranny
 
-    def print(self):
-        print("Stock #:",self.stockNum,", Year:",self.year,", Tranny:",self.tranny)
+    def toString(self):
+        return "Stock #: " + self.stockNum + ", Year: " + self.year + ", Tranny: " + self.tranny

@@ -2,9 +2,6 @@ import requests
 from bs4 import BeautifulSoup as BS
 from StarkData import Stark
 
-# query = "https://starkautosales.com/inventory.php?startyear=2006&location=TORONTO&model=CORVETTE"
-query = "https://starkautosales.com/inventory.php?startyear=2006&location=&model=4+SERIES"
-
 def getStarkCars(query):
 
     r = requests.get(query)
@@ -24,5 +21,3 @@ def getStarkCars(query):
         inventory.append(car)
 
     return inventory
-
-print(getStarkCars(query))

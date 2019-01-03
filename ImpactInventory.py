@@ -3,15 +3,12 @@ from ImpactRequest import ImpactSearch
 from ImpactData import Impact
 import json
 
-postURL = "https://www.impactauto.ca/Search/GetSearchResult/"
-model = "Corvette"
-
 def getImpactCars(URL, model, fromYear=None):
 
     payload = json.dumps(ImpactSearch(model, fromYear).__dict__)
 
     header = {'Content-Type':'application/json'}
-    r = requests.post(postURL, headers=header, data=payload)
+    r = requests.post(URL, headers=header, data=payload)
 
     response = json.loads(r.text)
 

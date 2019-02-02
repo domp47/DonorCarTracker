@@ -2,10 +2,10 @@ import smtplib
 import ast
 from email.message import EmailMessage
 
-def sendNotification(starkCars, impactCars, config):
+def sendNotification(starkCars, impactCars, copartCars, config):
 
     msg = EmailMessage()
-    msg.set_content(createMessage(starkCars, impactCars))
+    msg.set_content(createMessage(starkCars, impactCars, copartCars))
 
     recipients = ast.literal_eval(config["EMAIL"]["ToAddr"])
 
@@ -22,7 +22,7 @@ def sendNotification(starkCars, impactCars, config):
     s.sendmail(config["EMAIL"]["FromAddr"], recipients, msg.as_string())
     s.quit()
 
-def createMessage(starkCars, impactCars):
+def createMessage(starkCars, impactCars, copartCars):
     message = ""
 
     if len(starkCars) > 0:
@@ -39,6 +39,16 @@ def createMessage(starkCars, impactCars):
         message += "New Cars At Impact:\n"
 
         for car in impactCars:
+            message += car.toString()
+            message += '\n\n'
+
+    if len(copartCars) > 0:
+        if len(impactCars) > 0:
+            message += '\n\n'
+
+        message += "New Cars At Copart:\n"
+
+        for car in copartCars:
             message += car.toString()
             message += '\n\n'
 

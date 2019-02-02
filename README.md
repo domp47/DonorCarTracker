@@ -5,6 +5,7 @@ Instead of spending every morning checking websites for new vehicles on auction 
 python3
 
 BeautifulSoup4
+python-dateutil
 
 ### Installation
 0. Clone repository to desired location.
